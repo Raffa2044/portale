@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portale dell'Iperspaziotemporale</title>
+    <style>
+        body {
+            font-family: Comic Sans MS, Arial, sans-serif;
+            background: black;
+            color: white;
+            text-align: center;
+            overflow: hidden;
+            transition: background 0.2s;
+        }
+        h1 {
+            font-size: 3rem;
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: transform 0.2s ease-in-out, color 0.1s, font-size 0.1s;
+        }
+        button {
+            padding: 10px;
+            font-size: 1.5rem;
+            background: red;
+            color: yellow;
+            border: 3px solid white;
+            cursor: pointer;
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: top 0.1s, left 0.1s;
+        }
+        .meme {
+            width: 150px;
+            height: 150px;
+            background-size: cover;
+            position: absolute;
+        }
+        .glitch {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 0, 0, 0.1);
+            mix-blend-mode: difference;
+            display: none;
+            animation: glitch 0.1s infinite alternate;
+        }
+        @keyframes glitch {
+            0% { transform: translate(3px, -3px); }
+            100% { transform: translate(-3px, 3px); }
+        }
+        .chaosText {
+            position: absolute;
+            font-size: 2rem;
+            animation: chaosAnim 3s infinite;
+        }
+        @keyframes chaosAnim {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.5); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="glitch" id="glitchEffect"></div>
+    <h1 id="title">Portale dell'Iperspaziotemporale</h1>
+    <button id="randomButton">Distorci la Realtà</button>
+    <div id="memeContainer"></div>
+    <audio id="weirdSound"></audio>
+
+    <script>
+        const sounds = [
+            "https://www.myinstants.com/media/sounds/vine-boom.mp3",
+            "https://www.myinstants.com/media/sounds/roblox-death-sound.mp3",
+            "https://www.myinstants.com/media/sounds/among-us.mp3",
+            "https://www.myinstants.com/media/sounds/oof_1.mp3",
+            "https://www.myinstants.com/media/sounds/wow.mp3"
+        ];
+
+        document.getElementById("randomButton").addEventListener("click", triggerChaos);
+        document.addEventListener("mousemove", followMouse);
+        document.addEventListener("touchstart", triggerChaos); 
+
+        function triggerChaos() {
+            document.body.style.background = getRandomColor();
+            playRandomSound();
+            fetchRandomMeme();
+            randomizeText();
+            glitchEffect();
+            moveButton();
+            spawnRandomText();
+            vibrate();
+        }
+
+        function getRandomColor() {
+            return `rgb(${rand(0,255)}, ${rand(0,255)}, ${rand(0,255)})`;
+        }
+
+        function rand(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function playRandomSound() {
+            let sound = new Audio(sounds[rand(0, sounds.length - 1)]);
+            sound.play();
+        }
+
+        function fetchRandomMeme() {
+            fetch("https://source.unsplash.com/random/200x200")
+                .then(response => {
+                    let meme = document.createElement("div");
+                    meme.className = "meme";
+                    meme.style.backgroundImage = `url(${response.url})`;
+                    meme.style.top = rand(0, window.innerHeight - 150) + "px";
+                    meme.style.left = rand(0, window.innerWidth - 150) + "px";
+                    meme.style.animation = `bounce ${rand(2, 5)}s infinite alternate ease-in-out`;
+                    document.getElementById("memeContainer").appendChild(meme);
+                    setTimeout(() => meme.remove(), 5000);
+                });
+        }
+
+        function randomizeText() {
+            let title = document.getElementById("title");
+            title.style.left = rand(10, 90) + "%";
+            title.style.top = rand(10, 90) + "%";
+            title.style.transform = `rotate(${rand(-360, 360)}deg) scale(${Math.random() * 2})`;
+            title.style.color = getRandomColor();
+            title.style.fontSize = `${rand(20, 80)}px`;
+        }
+
+        function glitchEffect() {
+            let glitch = document.getElementById("glitchEffect");
+            glitch.style.display = "block";
+            setTimeout(() => glitch.style.display = "none", 200);
+        }
+
+        function moveButton() {
+            let btn = document.getElementById("randomButton");
+            btn.style.top = rand(10, 80) + "%";
+            btn.style.left = rand(10, 80) + "%";
+        }
+
+        function followMouse(event) {
+            let x = event.clientX;
+            let y = event.clientY;
+            let text = document.createElement("div");
+            text.className = "chaosText";
+            text.style.left = x + "px";
+            text.style.top = y + "px";
+            text.textContent = "??";
+            text.style.color = getRandomColor();
+            document.body.appendChild(text);
+            setTimeout(() => text.remove(), 1000);
+        }
+
+        function spawnRandomText() {
+            let text = document.createElement("div");
+            text.className = "chaosText";
+            text.style.left = rand(10, 90) + "%";
+            text.style.top = rand(10, 90) + "%";
+            text.textContent = ["AHHH!", "WTF?", "Dove sono?", "Perché?", "Aiuto"][rand(0, 4)];
+            text.style.color = getRandomColor();
+            document.body.appendChild(text);
+            setTimeout(() => text.remove(), 2000);
+        }
+
+        function vibrate() {
+            if (navigator.vibrate) {
+                navigator.vibrate(100);
+            }
+        }
+
+        setInterval(() => {
+            triggerChaos();
+        }, rand(5000, 15000));
+    </script>
+</body>
+</html>
